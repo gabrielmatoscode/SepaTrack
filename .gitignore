@@ -1,0 +1,21 @@
+# Credenciais
+.streamlit/secrets.toml
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vscode/
+
+# Dados e arquivos locais
+*.pdf
+*.xlsx
+*.csv
+*.db
+*.sqlite3
+*.json
+daily_doc.txt
+hist_pdfs/
