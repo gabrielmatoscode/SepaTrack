@@ -19,3 +19,4 @@ venv/
 *.json
 daily_doc.txt
 hist_pdfs/
+data/

@@ -4,6 +4,9 @@ import pandas as pd
 import plotly.express as px
 import os
 import json
+#INICIALIZAÇÃO DO BANCO DE DADOS#
+from database import inicializar_banco, salvar_historico
+inicializar_banco()
 
 #EXTRAIR OS DADOS PROCESSADOS#
 from pdfread_1 import extrair_odfs
