@@ -4,7 +4,7 @@ import streamlit as st
 #from extrair_id_odf_api import ids
 #import streamlit as st | não se é usado mais após concerto da lógica de upar PDFs ter sido alterada.
 
-token = st.secrets["korp_token"] # Bearer token da minha conta, tem tempo para expirar; ignorado#
+token = st.secrets["korp_token"] # Bearer token da minha conta, tem tempo para expirar; ignorado pela biblioteca do Streamlit#
 
 
  # anteriormente era 600. Devido a bugs de atualizações em tempo real dos dados, foi alterado pois o Picking é atualizado em tempo real pelo Controlador #

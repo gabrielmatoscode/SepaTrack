@@ -4,6 +4,11 @@
 # Função central que transforma os dados brutos do Korp (resultados = {odf: itens_do_picking}), vindo de korp_api_03 em tudo que o 'dashboard.py' precisa par desenhar os gráficos, KPIs
 # Recebe também como parâmetro o 'codigos_descricoes' vindo do PDF via pdfread_1 só para poder usar depois nas tabelas as informações de cada ODF do PDF. 
 
+#IMPORTS
+from database import salvar_historico
+
+
+
 def processar_dados(resultados, codigos_descricoes):
     dados_para_dashboard = {}
     for odf, lista_itens in resultados.items():
@@ -29,7 +34,7 @@ def processar_dados(resultados, codigos_descricoes):
                 "status": status,
                 "descricao": item["produtoDescricao"]
             })
-    print(dados_para_dashboard) # debug para o Console com o resultado bruto já filtrado # 
+    # print(dados_para_dashboard) # debug para o Console com o resultado bruto já filtrado # 
 #-----------------------------------------------#
     ########## Calculo da média de separação das ODF's para solda ##########
 #-----------------------------------------------#
@@ -47,6 +52,7 @@ def processar_dados(resultados, codigos_descricoes):
                 separados += 1
         percentuais[odf] = (separados / total) * 100 if total else 0 # Se não tem itens dentro da ODF o percentual vira 0.
 
+        salvar_historico(odf, total, separados)  # Salva o histórico de separação no banco de dados sepatrack.db # 
 
     print(f"Status da separação: {percentuais}")
 
@@ -97,7 +103,7 @@ def processar_dados(resultados, codigos_descricoes):
     "percentuais": percentuais,
     "odf_picking_incompleto": odf_picking_incompleto,
     "cod_naopego": cod_naopego,
-    "dados_condensados": dados_condensados,
+    "dados_condensados": dados_condensados,  
 }
 
     # -------------------------#

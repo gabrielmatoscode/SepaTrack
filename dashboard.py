@@ -5,7 +5,7 @@ import plotly.express as px
 import os
 import json
 #INICIALIZAÇÃO DO BANCO DE DADOS#
-from database import inicializar_banco, salvar_historico
+from database import inicializar_banco
 inicializar_banco()
 
 #EXTRAIR OS DADOS PROCESSADOS#

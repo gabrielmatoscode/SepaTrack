@@ -20,7 +20,7 @@ CAMINHO_BANCO = PASTA_DADOS / 'sepatrack.db'
 def conectar():
     return sqlite3.connect(CAMINHO_BANCO)
 
-# Criar tabela de histórico
+# Criar tabela de histórico caso ela ainda não exista
 def inicializar_banco():
     with conectar() as conexao:
         cursor = conexao.cursor()
@@ -31,7 +31,7 @@ def inicializar_banco():
                 odf TEXT NOT NULL,
                 data_consulta TEXT NOT NULL,
                 total_itens INTEGER NOT NULL,
-                itens_seprados INTEGER NOT NULL,
+                itens_separados INTEGER NOT NULL,
                 percentual_separado REAL NOT NULL
             )
         """)
@@ -47,32 +47,32 @@ def inicializar_banco():
     # Esse trecho garante que, à medida que o SepaTrack crescer e acumular milhares ou milhões de registros de separações, as consultas por ODF continuarão a ser executadas de forma extremamente rápida e eficiente #
 
 #==========================================#
-    def salvar_historico(odf, total_itens, itens_separados):
-        if total_itens <= 0:
-            return  # Evita salvar registros com total de itens inválido
+def salvar_historico(odf, total_itens, itens_separados): # registra uma consulta de ODF no banco 
+    if total_itens <= 0:
+        return  # Evita salvar registros com total de itens inválido
 
-        percentual = (itens_separados / total_itens) * 100
+    percentual = (itens_separados / total_itens) * 100
 
-        data_consulta = datetime.now().astimezone().isoformat(timespec="seconds")  # Armazena a data e hora com fuso horário
+    data_consulta = datetime.now().astimezone().isoformat(timespec="seconds")  # Armazena a data e hora com fuso horário
 
-        with conectar() as conexao:
-            conexao.execute("""
-                INSERT INTO historico_separacao(
-                odf,
-                data_consulta,
-                total_itens,
-                itens_separados,
-                percentual_separado
-                )
-                VALUES (?, ?, ?, ?, ?)
-                """, (str(odf), data_consulta, total_itens, itens_separados, percentual)
+    with conectar() as conexao:
+        conexao.execute("""
+            INSERT INTO historico_separacao(
+            odf,
+            data_consulta,
+            total_itens,
+            itens_separados,
+            percentual_separado
             )
+            VALUES (?, ?, ?, ?, ?)
+            """, (str(odf), data_consulta, total_itens, itens_separados, percentual)
+        )
 
 # Armazena o histórico de separação no banco de dados, incluindo a data e hora com fuso horário, garantindo que os registros sejam precisos e consistentes.
 #==========================================#
 
 #==========================================#
-def buscar_historico(odf):
+def buscar_historico(odf): # busca o histórico de separação de uma ODF específica
     with conectar() as conexao:
         conexao.row_factory = sqlite3.Row
 
@@ -85,5 +85,18 @@ def buscar_historico(odf):
     return [dict(row) for row in resultado]
 
 # a função buscar_historico(odf) permite recuperar todos os registros de separação associados a um ODF específico, ordenados pela data de consulta em ordem crescente. Isso facilita a análise do histórico de separações ao longo do tempo para cada ODF.
+
+#==========================================#
+
+# FUNÇÃO INATIVA DE ALTERAR NOME DE COLUNA #
+
+#def alterar_nome_coluna():
+    with conectar() as conexao:
+        conexao.execute("""
+            alter table historico_separacao
+            rename column itens_seprados to itens_separados
+        """)
+
+#alterar_nome_coluna() # Chama a função para alterar o nome da coluna na tabela historico_separacao, corrigindo o erro de digitação e garantindo que os dados sejam armazenados corretamente.
 
 #==========================================#
